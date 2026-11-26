@@ -1,5 +1,6 @@
 """Phase 1 CV ingestion, OCR, text cleaning, and benchmark package."""
 
+from src.extractor import extract_directory, extract_text
 from src.models import (
     CorruptedFileError,
     EncryptedPDFError,
@@ -18,4 +19,6 @@ __all__ = [
     "ExtractionResult",
     "TesseractNotFoundError",
     "UnsupportedFileTypeError",
+    "extract_directory",
+    "extract_text",
 ]
