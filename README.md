@@ -8,6 +8,9 @@ Tamamen lokal ve açık kaynak Python 3.12 kütüphaneleriyle çalışan (harici
 
 ```text
 .
+├── .streamlit/
+│   └── config.toml          # Kurumsal koyu tema ve sunucu yapılandırması
+├── app.py                   # Kurumsal koyu temalı Streamlit web arayüzü (Faz 1.5)
 ├── main.py                  # Tek dosya veya klasör işleyen argparse CLI giriş noktası
 ├── requirements.txt         # Python 3.12 bağımlılıkları
 ├── pytest.ini               # Pytest yapılandırması
@@ -18,8 +21,9 @@ Tamamen lokal ve açık kaynak Python 3.12 kütüphaneleriyle çalışan (harici
 │   ├── preprocessor.py      # OpenCV tabanlı Türkçe-yol güvenli ön işleme (grayscale, denoise, koşullu deskew)
 │   ├── extractor.py         # PyMuPDF tabanlı Smart Router (.pdf, .png/.jpg/.jpeg, .docx)
 │   ├── cleaner.py           # Teknik terimleri koruyan regex temizleyici (C++, C#, .NET, Node.js, CI/CD)
-│   └── evaluator.py         # Resume.csv Ground Truth kıyaslamalı OCR stres testi ve jiwer WER/CER benchmark
-└── tests/                   # Her modül için pytest birim ve entegrasyon testleri
+│   ├── evaluator.py         # Resume.csv Ground Truth kıyaslamalı OCR stres testi ve jiwer WER/CER benchmark
+│   └── ui_helpers.py        # Streamlit'ten bağımsız, test edilebilir UI yardımcı katmanı
+└── tests/                   # Her modül ve UI yardımcı katmanı için pytest testleri
 ```
 
 ## Kurulum
@@ -61,6 +65,19 @@ tesseract --version
   ```
 
 ## Kullanım
+
+### Web Arayüzü (Streamlit UI — Faz 1.5)
+
+Kurumsal koyu temalı web arayüzünü `.venv` içinde başlatmak için:
+```bash
+streamlit run app.py
+```
+
+Öne çıkan arayüz özellikleri:
+- **Eklemeli Çalışma Alanı (Additive Upload Queue):** Önceki yüklenen CV'leri sıfırlamadan yeni dosyalar ekler, SHA-256 içerik özetiyle kopyaları tekilleştirir.
+- **Uyarlanabilir Düzen:** 1 dosyada doğrudan KPI + Yan Yana İnceleme (Split View), 2+ dosyada Toplu Özet Tablosu + toplu JSON/CSV dışa aktarma moduna geçer.
+- **Original ↔ Preprocessed (OpenCV) Önizleme:** PDF sayfaları ve görsellerde orijinal görüntü ile Tesseract 5'e giren ön işlenmiş OpenCV görüntüsü arasında anlık geçiş sunar.
+- **OCR Benchmark & Faz 2 İskeleti:** `outputs/ocr_benchmark.csv` metriklerini grafik/tablo olarak görselleştirir ve Faz 2 `Job Matching` sekme iskeletini hazır sunar.
 
 ### CLI (`main.py`)
 
