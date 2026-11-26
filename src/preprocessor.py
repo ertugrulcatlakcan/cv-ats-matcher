@@ -118,6 +118,7 @@ def estimate_skew_angle(
     center = (b_width / 2.0, b_height / 2.0)
 
     def _projection_score(angle: float) -> float:
+        """Compute horizontal row-sum variance at a candidate rotation angle."""
         if angle == 0.0:
             rotated = binary
         else:

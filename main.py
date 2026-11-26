@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import logging
 import sys
@@ -110,6 +111,15 @@ def _configure_logging(verbose: bool) -> None:
     )
 
 
+def _configure_stdio_utf8() -> None:
+    """Ensure Windows console stdout/stderr use UTF-8 when attached to a text wrapper."""
+    for stream in (sys.stdout, sys.stderr):
+        if isinstance(stream, io.TextIOWrapper):
+            encoding = (stream.encoding or "").lower()
+            if encoding != "utf-8":
+                stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the CV extraction CLI.
 
@@ -119,6 +129,7 @@ def main(argv: list[str] | None = None) -> int:
     Returns:
         Process exit code (``0`` on success, ``1`` on handled error).
     """
+    _configure_stdio_utf8()
     args = build_parser().parse_args(argv)
     _configure_logging(args.verbose)
 
